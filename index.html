@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jabones Artesanales | Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Boxicons for icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="logo-container">
+            <h1 class="logo">Oléa <span>Artesanal</span></h1>
+        </div>
+        <div class="header-actions">
+            <button id="cart-btn" class="icon-btn">
+                <i class='bx bx-shopping-bag'></i>
+                <span id="cart-count">0</span>
+            </button>
+            <button id="menu-btn" class="icon-btn">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Product Grid Section -->
+    <main class="main-content">
+        <section class="hero">
+            <h2>Cuidado natural para tu piel</h2>
+            <p>Descubre nuestra colección exclusiva de jabones hechos a mano.</p>
+        </section>
+
+        <!-- Product Grid: 3 columns -->
+        <section id="products-container" class="product-grid">
+            <!-- Productos cargados dinámicamente desde JS -->
+        </section>
+    </main>
+
+    <!-- Shopping Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Tu Carrito</h2>
+            <button id="close-cart" class="close-btn"><i class='bx bx-x'></i></button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <!-- Items del carrito cargados dinámicamente -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="total-price">$0</span>
+            </div>
+            <button id="checkout-btn" class="primary-btn">
+                <i class='bx bxl-whatsapp'></i> Comprar por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay para el carrito -->
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 Oléa Artesanal. Todos los derechos reservados. | <a href="admin.html" style="color: #ccc; text-decoration: none; font-size: 0.8rem;">Admin</a></p>
+            <button id="sistecredito-btn" class="sistecredito-btn">
+                Paga con Sistecrédito
+            </button>
+        </div>
+    </footer>
+
+    <!-- Botón flotante de WhatsApp -->
+    <a href="https://wa.me/573000000000" target="_blank" class="float-wa-btn">
+        <i class='bx bxl-whatsapp'></i>
+    </a>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

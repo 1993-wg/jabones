@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | Oléa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+    <!-- Pantalla de Login -->
+    <div id="login-section" class="login-container">
+        <div class="login-box">
+            <h2>Acceso Administrador</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label>Usuario</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn primary-btn">Ingresar</button>
+                <p id="login-error" class="error-msg"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Principal -->
+    <div id="dashboard-section" class="dashboard-container" style="display: none;">
+        <header class="admin-header">
+            <h2>Administrar Productos</h2>
+            <div class="header-actions">
+                <a href="index.html" class="btn outline-btn" target="_blank">Ver Tienda</a>
+                <button id="logout-btn" class="btn danger-btn">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <main class="admin-main">
+            <div class="table-header">
+                <h3>Tus Productos</h3>
+                <button id="add-new-btn" class="btn success-btn"><i class='bx bx-plus'></i> Nuevo Producto</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Precio</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-tbody">
+                        <!-- Productos cargados dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para Agregar/Editar Producto -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Agregar Producto</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form id="product-form">
+                <input type="hidden" id="prod-id">
+                <div class="input-group">
+                    <label>Nombre</label>
+                    <input type="text" id="prod-name" required>
+                </div>
+                <div class="input-group">
+                    <label>Descripción corta</label>
+                    <textarea id="prod-desc" rows="2" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Precio (COP)</label>
+                    <input type="number" id="prod-price" required min="0">
+                </div>
+                <div class="input-group">
+                    <label>URL de Imagen</label>
+                    <input type="url" id="prod-image" required placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn outline-btn close-modal-btn">Cancelar</button>
+                    <button type="submit" class="btn primary-btn">Guardar Producto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
