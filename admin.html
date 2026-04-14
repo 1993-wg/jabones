@@ -86,8 +86,10 @@
                     <input type="number" id="prod-price" required min="0">
                 </div>
                 <div class="input-group">
-                    <label>URL de Imagen</label>
-                    <input type="url" id="prod-image" required placeholder="https://ejemplo.com/imagen.jpg">
+                    <label>Imagen del Producto</label>
+                    <input type="file" id="prod-image-file" accept="image/*" style="margin-bottom: 0.5rem;">
+                    <p style="font-size: 0.75rem; color: #777; margin-bottom: 0.5rem;">Sube una foto desde tu cámara/galería o pega una URL abajo:</p>
+                    <input type="url" id="prod-image" placeholder="https://ejemplo.com/imagen.jpg">
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn outline-btn close-modal-btn">Cancelar</button>

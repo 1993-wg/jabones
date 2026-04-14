@@ -126,9 +126,39 @@ productForm.addEventListener('submit', async (e) => {
     const name = document.getElementById('prod-name').value;
     const desc = document.getElementById('prod-desc').value;
     const price = parseFloat(document.getElementById('prod-price').value);
-    const image = document.getElementById('prod-image').value;
+    
+    // IMAGE HANDLING
+    let imageUrl = document.getElementById('prod-image').value;
+    const fileInput = document.getElementById('prod-image-file');
+    const file = fileInput.files[0];
 
-    const payload = { name, description: desc, price, image };
+    // Logica de subida a Storage si se selecciono archivo
+    if (file) {
+        submitBtn.innerText = "Subiendo imagen...";
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { data, error } = await supabase.storage.from('jabones').upload(filePath, file);
+        if (error) {
+            alert("Error subiendo la imagen: (Asegúrate de haber creado el bucket público 'jabones' en Supabase) - " + error.message);
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+            return;
+        }
+
+        const { data: publicData } = supabase.storage.from('jabones').getPublicUrl(filePath);
+        imageUrl = publicData.publicUrl;
+    }
+
+    if (!imageUrl) {
+        alert("Por favor, sube una imagen o proporciona una URL válida.");
+        submitBtn.innerText = originalText;
+        submitBtn.disabled = false;
+        return;
+    }
+
+    const payload = { name, description: desc, price, image: imageUrl };
 
     if (idField) {
         // Edit 
@@ -149,6 +179,9 @@ productForm.addEventListener('submit', async (e) => {
 });
 
 window.editProduct = (id) => {
+    productForm.reset();
+    document.getElementById('prod-id').value = '';
+
     const product = dbProducts.find(p => p.id == id);
     if (product) {
         document.getElementById('prod-id').value = product.id;
