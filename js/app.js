@@ -1,7 +1,7 @@
 // Configuración Supabase
 const SUPABASE_URL = 'https://jqxhwdyqdexeqsepvxrp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_KM5StM0sLaDsgi0k7-5i-w_lO_kBvj6';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let products = [];
 let cart = [];
@@ -29,7 +29,7 @@ const formatMoney = (amount) => {
 // Cargar Productos desde Supabase
 const fetchProducts = async () => {
     productsContainer.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Cargando productos naturales...</p>';
-    const { data, error } = await supabase.from('jabones').select('*').order('id', { ascending: true });
+    const { data, error } = await supabaseClient.from('jabones').select('*').order('id', { ascending: true });
     
     if (error) {
         console.error('Error fetching Supabase data:', error);

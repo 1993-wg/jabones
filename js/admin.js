@@ -1,10 +1,10 @@
 // Configuración Supabase
 const SUPABASE_URL = 'https://jqxhwdyqdexeqsepvxrp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_KM5StM0sLaDsgi0k7-5i-w_lO_kBvj6';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Credenciales simples (Hardcoded para entorno estático)
-const ADMIN_USER = "admin";
+const ADMIN_USER = "jero";
 const ADMIN_PASS = "Olea2026";
 
 // Elementos DOM
@@ -66,22 +66,22 @@ const formatMoney = (amount) => {
 // Cargar desde Supabase
 const loadProductsFromDB = async () => {
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Cargando...</td></tr>';
-    
-    const { data, error } = await supabase.from('jabones').select('*').order('id', { ascending: true });
-    
+
+    const { data, error } = await supabaseClient.from('jabones').select('*').order('id', { ascending: true });
+
     if (error) {
         console.error('Error fetching data:', error);
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error de conexión con la base de datos</td></tr>';
         return;
     }
-    
+
     dbProducts = data;
     renderTable();
 };
 
 const renderTable = () => {
     tbody.innerHTML = '';
-    
+
     if (dbProducts.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay productos guardados.</td></tr>';
         return;
@@ -126,7 +126,7 @@ productForm.addEventListener('submit', async (e) => {
     const name = document.getElementById('prod-name').value;
     const desc = document.getElementById('prod-desc').value;
     const price = parseFloat(document.getElementById('prod-price').value);
-    
+
     // IMAGE HANDLING
     let imageUrl = document.getElementById('prod-image').value;
     const fileInput = document.getElementById('prod-image-file');
@@ -139,7 +139,7 @@ productForm.addEventListener('submit', async (e) => {
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        const { data, error } = await supabase.storage.from('jabones').upload(filePath, file);
+        const { data, error } = await supabaseClient.storage.from('jabones').upload(filePath, file);
         if (error) {
             alert("Error subiendo la imagen: (Asegúrate de haber creado el bucket público 'jabones' en Supabase) - " + error.message);
             submitBtn.innerText = originalText;
@@ -147,7 +147,7 @@ productForm.addEventListener('submit', async (e) => {
             return;
         }
 
-        const { data: publicData } = supabase.storage.from('jabones').getPublicUrl(filePath);
+        const { data: publicData } = supabaseClient.storage.from('jabones').getPublicUrl(filePath);
         imageUrl = publicData.publicUrl;
     }
 
@@ -162,18 +162,18 @@ productForm.addEventListener('submit', async (e) => {
 
     if (idField) {
         // Edit 
-        const { error } = await supabase.from('jabones').update(payload).eq('id', idField);
+        const { error } = await supabaseClient.from('jabones').update(payload).eq('id', idField);
         if (error) alert("Error actualizando producto: " + error.message);
     } else {
         // Add
-        const { error } = await supabase.from('jabones').insert([payload]);
+        const { error } = await supabaseClient.from('jabones').insert([payload]);
         if (error) alert("Error añadiendo producto: " + error.message);
     }
 
     submitBtn.innerText = originalText;
     submitBtn.disabled = false;
     modal.classList.remove('active');
-    
+
     // Recargar tabla para traer los nuevos IDs si se insertó uno
     loadProductsFromDB();
 });
@@ -189,7 +189,7 @@ window.editProduct = (id) => {
         document.getElementById('prod-desc').value = product.description;
         document.getElementById('prod-price').value = product.price;
         document.getElementById('prod-image').value = product.image;
-        
+
         modalTitle.innerText = "Editar Producto";
         modal.classList.add('active');
     }
@@ -197,7 +197,7 @@ window.editProduct = (id) => {
 
 window.deleteProduct = async (id) => {
     if (confirm("¿Estás seguro de eliminar este producto? Esto se reflejará en vivo para todos los usuarios.")) {
-        const { error } = await supabase.from('jabones').delete().eq('id', id);
+        const { error } = await supabaseClient.from('jabones').delete().eq('id', id);
         if (error) {
             alert("Error al eliminar: " + error.message);
             return;
