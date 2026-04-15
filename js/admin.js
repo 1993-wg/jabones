@@ -38,10 +38,10 @@ const checkAuth = () => {
 
 loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const user = document.getElementById('username').value;
-    const pass = document.getElementById('password').value;
+    const user = document.getElementById('username').value.trim().toLowerCase();
+    const pass = document.getElementById('password').value.trim();
 
-    if (user === ADMIN_USER && pass === ADMIN_PASS) {
+    if (user === ADMIN_USER.toLowerCase() && pass === ADMIN_PASS) {
         sessionStorage.setItem('olea_admin', 'true');
         checkAuth();
     } else {

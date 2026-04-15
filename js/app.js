@@ -157,7 +157,7 @@ checkoutBtn.addEventListener('click', () => {
     message += `%0A*Total: ${formatMoney(total)}*%0A%0A`;
     message += "Quedo atento(a) para concretar el pago y envío.";
 
-    const waNumber = "573000000000"; // Cambiar por el número real del cliente!!!
+    const waNumber = "573043194458";
     const waUrl = `https://wa.me/${waNumber}?text=${message}`;
     
     window.open(waUrl, '_blank');
