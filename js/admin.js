@@ -93,6 +93,7 @@ const renderTable = () => {
             <td><img src="${p.image}" class="prod-img" alt="${p.name}"></td>
             <td><strong>${p.name}</strong></td>
             <td>${formatMoney(p.price)}</td>
+            <td><small style="background:#eef2f5; padding:2px 8px; border-radius:12px;">${p.category || 'Jabones corporales'}</small></td>
             <td style="max-width:200px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${p.description}</td>
             <td class="actions-cell">
                 <button class="icon-btn edit-btn" onclick="editProduct(${p.id})"><i class='bx bx-edit-alt'></i></button>
@@ -124,6 +125,7 @@ productForm.addEventListener('submit', async (e) => {
 
     const idField = document.getElementById('prod-id').value;
     const name = document.getElementById('prod-name').value;
+    const category = document.getElementById('prod-category').value;
     const desc = document.getElementById('prod-desc').value;
     const price = parseFloat(document.getElementById('prod-price').value);
 
@@ -158,7 +160,7 @@ productForm.addEventListener('submit', async (e) => {
         return;
     }
 
-    const payload = { name, description: desc, price, image: imageUrl };
+    const payload = { name, description: desc, price, category, image: imageUrl };
 
     if (idField) {
         // Edit 
@@ -186,6 +188,7 @@ window.editProduct = (id) => {
     if (product) {
         document.getElementById('prod-id').value = product.id;
         document.getElementById('prod-name').value = product.name;
+        document.getElementById('prod-category').value = product.category || 'Jabones corporales';
         document.getElementById('prod-desc').value = product.description;
         document.getElementById('prod-price').value = product.price;
         document.getElementById('prod-image').value = product.image;

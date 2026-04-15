@@ -27,11 +27,33 @@
         </div>
     </header>
 
+    <!-- Menu Sidebar (Category Filter) -->
+    <div id="menu-sidebar" class="cart-sidebar" style="right: auto; left: -100%; transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        <div class="cart-header">
+            <h2>Categorías</h2>
+            <button id="close-menu" class="close-btn"><i class='bx bx-x'></i></button>
+        </div>
+        <div class="cart-items" style="padding: 0;">
+            <ul class="cat-list" id="category-list">
+                <li class="cat-item active" data-cat="all">Todos los productos</li>
+                <li class="cat-item" data-cat="Jabones corporales">Jabones corporales</li>
+                <li class="cat-item" data-cat="Jabones capilares">Jabones capilares</li>
+                <li class="cat-item" data-cat="Cremas corporales">Cremas corporales</li>
+                <li class="cat-item" data-cat="Lociones corporales">Lociones corporales</li>
+            </ul>
+        </div>
+    </div>
+
     <!-- Main Product Grid Section -->
     <main class="main-content">
         <section class="hero">
             <h2>Cuidado natural para tu piel</h2>
             <p>Descubre nuestra colección exclusiva de jabones hechos a mano.</p>
+            
+            <div class="search-container">
+                <i class='bx bx-search'></i>
+                <input type="text" id="search-input" placeholder="Buscar productos...">
+            </div>
         </section>
 
         <!-- Product Grid: 3 columns -->

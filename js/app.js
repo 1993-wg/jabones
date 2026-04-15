@@ -5,6 +5,8 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let products = [];
 let cart = [];
+let currentCategory = 'all';
+let currentSearch = '';
 
 // Elementos del DOM
 const productsContainer = document.getElementById('products-container');
@@ -16,6 +18,13 @@ const cartItemsContainer = document.getElementById('cart-items');
 const cartCount = document.getElementById('cart-count');
 const totalPriceEl = document.getElementById('total-price');
 const checkoutBtn = document.getElementById('checkout-btn');
+
+// Nuevos Elementos
+const menuBtn = document.getElementById('menu-btn');
+const menuSidebar = document.getElementById('menu-sidebar');
+const closeMenuBtn = document.getElementById('close-menu');
+const searchInput = document.getElementById('search-input');
+const catItems = document.querySelectorAll('.cat-item');
 
 // Formatear moneda (Pesos COP)
 const formatMoney = (amount) => {
@@ -41,23 +50,32 @@ const fetchProducts = async () => {
     renderProducts();
 };
 
-// Renderizar Productos
+// Renderizar Productos (con filtros)
 const renderProducts = () => {
     productsContainer.innerHTML = '';
     
-    if(products.length === 0) {
-        productsContainer.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">No hay productos disponibles por el momento.</p>';
+    // Filtrar la lista
+    let filtered = products;
+    if (currentCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === currentCategory);
+    }
+    if (currentSearch.trim() !== '') {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(currentSearch) || (p.description && p.description.toLowerCase().includes(currentSearch)));
+    }
+
+    if(filtered.length === 0) {
+        productsContainer.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">No hay productos que coincidan con la búsqueda.</p>';
         return;
     }
 
-    products.forEach(product => {
+    filtered.forEach(product => {
         const productCard = document.createElement('div');
         productCard.classList.add('product-card');
         productCard.innerHTML = `
             <img src="${product.image}" alt="${product.name}" class="product-img">
             <div class="product-info">
                 <h3 class="product-title">${product.name}</h3>
-                <p class="product-desc">${product.description}</p>
+                <p class="product-desc">${product.description || ''}</p>
                 <div class="product-price">${formatMoney(product.price)}</div>
                 <button class="add-btn" onclick="addToCart(${product.id})">
                     Agregar al carrito
@@ -89,8 +107,26 @@ const removeFromCart = (productId) => {
     cart = cart.filter(item => item.id !== productId);
     updateCart();
 };
-
 window.removeFromCart = removeFromCart;
+
+const increaseQuantity = (id) => {
+    const item = cart.find(i => i.id === id);
+    if (item) { item.quantity++; updateCart(); }
+};
+window.increaseQuantity = increaseQuantity;
+
+const decreaseQuantity = (id) => {
+    const item = cart.find(i => i.id === id);
+    if (item) {
+        if (item.quantity > 1) {
+            item.quantity--;
+        } else {
+            cart = cart.filter(i => i.id !== id);
+        }
+        updateCart();
+    }
+};
+window.decreaseQuantity = decreaseQuantity;
 
 const updateCart = () => {
     cartItemsContainer.innerHTML = '';
@@ -106,8 +142,13 @@ const updateCart = () => {
         cartItem.innerHTML = `
             <img src="${item.image}" alt="${item.name}" class="cart-item-img">
             <div class="cart-item-info">
-                <h4 class="cart-item-title">${item.name} (x${item.quantity})</h4>
+                <h4 class="cart-item-title">${item.name}</h4>
                 <div class="cart-item-price">${formatMoney(item.price * item.quantity)}</div>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="decreaseQuantity(${item.id})">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="qty-btn" onclick="increaseQuantity(${item.id})">+</button>
+                </div>
             </div>
             <button class="remove-btn" onclick="removeFromCart(${item.id})">
                 <i class='bx bx-trash'></i>
@@ -135,9 +176,36 @@ const closeCart = () => {
     overlay.classList.remove('active');
 };
 
-cartBtn.addEventListener('click', openCart);
-closeCartBtn.addEventListener('click', closeCart);
-overlay.addEventListener('click', closeCart);
+// Menu Lateral (Hamburguesa)
+const openMenu = () => {
+    menuSidebar.classList.add('left-active');
+    overlay.classList.add('active');
+};
+const closeMenu = () => {
+    menuSidebar.classList.remove('left-active');
+    overlay.classList.remove('active');
+};
+
+menuBtn.addEventListener('click', openMenu);
+closeMenuBtn.addEventListener('click', closeMenu);
+overlay.addEventListener('click', () => { closeCart(); closeMenu(); });
+
+// Buscador
+searchInput.addEventListener('input', (e) => {
+    currentSearch = e.target.value.toLowerCase();
+    renderProducts();
+});
+
+// Selector de Categoria
+catItems.forEach(item => {
+    item.addEventListener('click', () => {
+        catItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        currentCategory = item.getAttribute('data-cat');
+        renderProducts();
+        closeMenu();
+    });
+});
 
 // Checkout WhatsApp
 checkoutBtn.addEventListener('click', () => {
